@@ -1,0 +1,18 @@
+server:
+  port: 8444
+
+spring:
+  application:
+    name: client-service
+  ssl:
+    bundle:
+      jks:
+        secure-api:
+          keystore:
+            location: classpath:client-service.p12
+            password: changeit
+            type: PKCS12
+          truststore:
+            location: classpath:client-truststore.p12
+            password: changeit
+            type: PKCS12
