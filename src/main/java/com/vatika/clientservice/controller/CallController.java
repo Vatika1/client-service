@@ -1,5 +1,6 @@
 package com.vatika.clientservice.controller;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
@@ -14,13 +15,14 @@ public class CallController {
     }
 
     @GetMapping("/call")
+    @CircuitBreaker(name = "secureApi", fallbackMethod = "fallback")
     public String call() {
         return secureApiClient.get()
-                .uri("/")
-                .retrieve()
-                .onStatus(status -> true, (req, res) -> {})
-                .toBodilessEntity()
-                .getStatusCode()
-                .toString();
+                .uri("https://localhost:8443/orders")
+                .retrieve().body(String.class);
+    }
+
+    public String fallback(Throwable t) {
+        return "fallback: " + t.getClass().getSimpleName();
     }
 }

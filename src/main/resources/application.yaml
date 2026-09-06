@@ -16,3 +16,17 @@ spring:
             location: classpath:client-truststore.p12
             password: changeit
             type: PKCS12
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      secureApi:
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        record-exceptions:
+          - org.springframework.web.client.ResourceAccessException
